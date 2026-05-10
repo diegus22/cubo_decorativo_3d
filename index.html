@@ -1,500 +1,303 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 Letras 3D - Modelo para Impresión</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            color: white;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .title {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .input-section {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            max-width: 800px;
-            width: 100%;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-        .input-section h3 {
-            margin-bottom: 15px;
-            color: #ffd700;
-        }
-        .input-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin: 10px 0;
-        }
-        .input-row label {
-            min-width: 80px;
-        }
-        input[type="text"] {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.15);
-            color: white;
-            font-size: 18px;
-            outline: none;
-            transition: all 0.3s;
-        }
-        input[type="text"]:focus {
-            border-color: #ffd700;
-            background: rgba(255,255,255,0.25);
-        }
-        input[type="text"]::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-        input[type="range"] {
-            width: 120px;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255,255,255,0.3);
-            outline: none;
-            -webkit-appearance: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #ffd700;
-            cursor: pointer;
-        }
-        .viewer {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        button {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            font-size: 14px;
-        }
-        button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-        button.primary {
-            background: linear-gradient(45deg, #ffd700, #ff6b6b);
-            border: none;
-        }
-        button.primary:hover {
-            background: linear-gradient(45deg, #ff6b6b, #ffd700);
-        }
-        .info {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            max-width: 800px;
-            backdrop-filter: blur(10px);
-            width: 100%;
-        }
-        .info h3 { margin-bottom: 15px; color: #ffd700; }
-        .info ul { list-style: none; padding: 0; }
-        .info li { margin: 8px 0; padding-left: 20px; position: relative; }
-        .info li:before { content: "✅"; position: absolute; left: 0; }
-        .preview-text {
-            font-size: 60px;
-            text-align: center;
-            padding: 20px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .style-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        .style-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.2);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .style-btn.active {
-            background: rgba(255,215,0,0.2);
-            border-color: #ffd700;
-        }
-        .style-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Llaveros 3D — Diego García</title>
+<style>
+:root { --bg:#0b0e13; --panel:#161a20; --border:#1f2630; --fg:#e6edf3; --muted:#8b949e; --accent:#7c4dff; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,BlinkMacSystemFont,Inter,sans-serif;overflow:hidden}
+.app{display:grid;grid-template-columns:320px 1fr;height:100vh}
+aside{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:24px}
+aside h1{font-size:18px;font-weight:600;margin-bottom:6px;letter-spacing:-0.02em}
+aside .sub{color:var(--muted);font-size:12px;margin-bottom:24px}
+.field{margin-bottom:18px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em}
+input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--fg);font:600 16px Inter,sans-serif;outline:none}
+input[type=text]:focus{border-color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.value{display:flex;justify-content:space-between;align-items:center;color:var(--fg);font-size:12px;margin-top:4px}
+button{background:var(--accent);color:white;border:none;border-radius:8px;padding:12px 16px;cursor:pointer;font:600 14px Inter,sans-serif;width:100%;transition:transform 0.1s}
+button:hover{transform:translateY(-1px)}
+button.secondary{background:var(--bg);border:1px solid var(--border);color:var(--fg)}
+button.secondary:hover{border-color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+main{position:relative}
+canvas{display:block;width:100%;height:100%}
+.info{position:absolute;top:16px;right:16px;background:rgba(22,26,32,0.9);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted);backdrop-filter:blur(4px)}
+.info b{color:var(--fg)}
+.preset{display:inline-block;background:var(--bg);border:1px solid var(--border);color:var(--fg);padding:4px 10px;border-radius:14px;margin-right:4px;margin-bottom:4px;cursor:pointer;font-size:12px}
+.preset:hover{border-color:var(--accent)}
+footer{margin-top:auto;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:11px}
+footer a{color:var(--accent);text-decoration:none}
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1 class="title">🎨 Letras 3D Interactivas</h1>
-        <p class="subtitle">Crea palabras en 3D para imprimir con Bambu Lab</p>
+<div class="app">
+  <aside>
+    <h1>🔑 Llaveros 3D</h1>
+    <div class="sub">Genera tu llavero personalizado y descarga el STL para imprimir</div>
+
+    <div class="field">
+      <label>Texto</label>
+      <input type="text" id="text" value="LORETO" maxlength="12" autocomplete="off">
+      <div style="margin-top:8px">
+        <span class="preset" onclick="setText('LORETO')">LORETO</span>
+        <span class="preset" onclick="setText('DIEGO')">DIEGO</span>
+        <span class="preset" onclick="setText('AVIOT')">AVIOT</span>
+        <span class="preset" onclick="setText('MAMÁ')">MAMÁ</span>
+        <span class="preset" onclick="setText('PAPÁ')">PAPÁ</span>
+      </div>
     </div>
 
-    <div class="input-section">
-        <h3>✏️ Escribe tu texto:</h3>
-        <div class="input-row">
-            <input type="text" id="textInput" placeholder="Ej: HOLA, AMIGO, SOUL..." value="HOLA" maxlength="20">
-            <button class="primary" onclick="generate3DText()">🚀 Generar 3D</button>
-        </div>
-        
-        <div class="input-row">
-            <label>📏 Tamaño:</label>
-            <input type="range" id="sizeSlider" min="0.03" max="0.25" step="0.01" value="0.1">
-            <span id="sizeValue">0.10</span>
-        </div>
-        
-        <div class="input-row">
-            <label>📐 Profundidad:</label>
-            <input type="range" id="depthSlider" min="0.1" max="0.8" step="0.05" value="0.3">
-            <span id="depthValue">0.30</span>
-        </div>
-        
-        <div class="input-row">
-            <label>💎 Color:</label>
-            <input type="color" id="colorPicker" value="#ffd700">
-        </div>
+    <div class="field">
+      <label>Tamaño letra: <span id="sizeVal">22</span> mm</label>
+      <input type="range" id="size" min="10" max="40" value="22">
     </div>
 
-    <div class="viewer" id="viewer">
-        <canvas id="canvas"></canvas>
+    <div class="field">
+      <label>Profundidad letra: <span id="depthVal">5</span> mm</label>
+      <input type="range" id="depth" min="2" max="15" value="5">
     </div>
 
-    <div class="controls">
-        <button onclick="resetView()">🔄 Vista Original</button>
-        <button onclick="toggleAnimation()">▶️ Animación</button>
-        <button onclick="takeScreenshot()">📸 Capturar</button>
+    <div class="field">
+      <label>Espesor placa: <span id="plateVal">3</span> mm</label>
+      <input type="range" id="plate" min="2" max="8" value="3">
     </div>
 
+    <div class="field">
+      <label>Diámetro aro: <span id="ringVal">6</span> mm</label>
+      <input type="range" id="ring" min="3" max="12" value="6">
+    </div>
+
+    <div class="field">
+      <label>Resolución (curvas)</label>
+      <select id="curveseg" style="width:100%;padding:8px;background:var(--bg);border:1px solid var(--border);color:var(--fg);border-radius:8px">
+        <option value="6">Baja (rápido)</option>
+        <option value="12" selected>Media (recomendado)</option>
+        <option value="20">Alta (lento)</option>
+      </select>
+    </div>
+
+    <button onclick="downloadSTL()">⬇️ Descargar STL</button>
+    <div class="row">
+      <button class="secondary" onclick="resetView()">↻ Vista</button>
+      <button class="secondary" onclick="window.open('https://github.com/diegus22/llaveros3d','_blank')">📦 Repo</button>
+    </div>
+
+    <footer>
+      Cuerpo único manifold (un solo cuerpo, sin huecos parásitos).<br>
+      Imprimir en PLA/PETG, 0.16 mm, 20% relleno, sin soportes (cara plana abajo).<br>
+      <br>by <a href="https://diegus22.github.io" target="_blank">Diego García</a> · Ingeniatic
+    </footer>
+  </aside>
+  <main>
+    <canvas id="c"></canvas>
     <div class="info">
-        <h3>🎯 Características:</h3>
-        <ul>
-            <li>Letras 3D en cualquier estilo/dirección</li>
-            <li>Profundidad ajustable para impresión</li>
-            <li>Rotación interactiva con mouse</li>
-            <li>Listo para exportar a Bambu Lab</li>
-            <li>Ideal para letreros decorativos</li>
-        </ul>
-        
-        <h3>📋 Para imprimir:</h3>
-        <ul>
-            <li>1. Escribe tu palabra arriba</li>
-            <li>2. Ajusta tamaño y profundidad</li>
-            <li>3. Genera el modelo 3D</li>
-            <li>4. Exporta con Bambu Lab</li>
-        </ul>
+      <b id="dims">--</b> · <span id="tri">-- triángulos</span>
     </div>
+  </main>
+</div>
 
-    <div class="share">
-        <h3>🔗 Comparte tu creación:</h3>
-        <input type="text" id="shareUrl" value="" readonly style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:10px;border-radius:5px;margin:10px;width:300px;">
-        <button onclick="copyShareUrl()">📋 Copiar</button>
-    </div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+import { CSG } from 'https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.16/+esm';
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        let scene, camera, renderer, textGroup;
-        let animating = false;
-        let letters = [];
+let scene, camera, renderer, controls, font, currentMesh;
+const canvas = document.getElementById('c');
 
-        // Simple 3D letter shapes (block letters)
-        const letterShapes = {
-            'A': [[0,1,0],[0,0,1],[1,0,1],[1,1,0],[0.5,1.5,0.5]],
-            'B': [[0,0,0],[0,2,0],[0.5,2,0],[1,1.5,0],[0.5,1,0],[1,0.5,0],[0,0,0]],
-            'C': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,1.8,0],[1,1.8,0],[1,2,0],[0,2,0],[0,0,0]],
-            'D': [[0,0,0],[0,2,0],[1,1.8,0],[1.2,1,0],[1,0.2,0],[0,0,0]],
-            'E': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,0.9,0],[1,0.9,0],[1,1.1,0],[0.2,1.1,0],[0.2,1.8,0],[1,1.8,0],[1,2,0],[0,2,0],[0,0,0]],
-            'F': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,0.9,0],[1,0.9,0],[1,1.1,0],[0.2,1.1,0],[0.2,2,0],[0,2,0],[0,0,0]],
-            'G': [[1,0,0],[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.5,1.2,0],[0.5,1,0],[1,1,0],[1,0,0]],
-            'H': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,2,0],[0.2,0.9,0],[1,0.9,0],[1,0,0],[1,2,0],[1.2,0,0],[1.2,2,0]],
-            'I': [[0,0,0],[1,0,0],[0.4,0,0],[0.4,2,0],[1,2,0],[0,2,0],[0.6,2,0],[0.6,0,0]],
-            'J': [[0,0,0],[1,0,0],[1,0,0],[1,2,0],[0.8,2,0],[0.8,0.2,0],[0,0.2,0],[0,0,0]],
-            'K': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,2,0],[0.2,1,0],[1,2,0],[0.8,2,0],[0.2,1.1,0],[1,0,0],[0.8,0,0]],
-            'L': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,0.2,0],[1,0.2,0],[1,0,0],[0,0,0]],
-            'M': [[0,0,0],[0,2,0],[0.2,0,0],[0.5,1.5,0],[0.8,0,0],[1,2,0],[1.2,0,0]],
-            'N': [[0,0,0],[0,2,0],[0.2,0,0],[1,1.8,0],[1,0,0],[1,2,0],[1.2,0,0]],
-            'O': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0]],
-            'P': [[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.2,1.2,0],[0.2,0,0]],
-            'Q': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0],[0.8,0.8,0],[1,0.6,0],[1,0,0]],
-            'R': [[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.2,1.2,0],[0.2,0,0],[0.2,1,0],[1,0,0],[0.8,0,0]],
-            'S': [[1,0,0],[0,0,0],[0,0.8,0],[1,0.8,0],[1,1.2,0],[0,1.2,0],[0,2,0],[1,2,0]],
-            'T': [[0,0,0],[1,0,0],[0.4,0,0],[0.4,2,0],[0.6,2,0],[0.6,0,0],[0,0,0]],
-            'U': [[0,0,0],[0,2,0],[0.2,2,0],[0.2,0.2,0],[0.8,0.2,0],[0.8,2,0],[1,2,0],[1,0,0],[0,0,0]],
-            'V': [[0,0,0],[0.5,2,0],[0.7,2,0],[1,0,0],[0.8,0,0],[0.6,1.5,0],[0.4,1.5,0],[0.2,0,0]],
-            'W': [[0,0,0],[0.3,2,0],[0.5,2,0],[0.5,1,0],[0.7,2,0],[1,2,0],[1,0,0],[0.8,0,0],[0.6,1.5,0],[0.4,1.5,0],[0.2,0,0]],
-            'X': [[0,0,0],[1,2,0],[0.8,2,0],[0,0.2,0],[1,0,0],[0,2,0],[0.2,2,0]],
-            'Y': [[0,0,0],[0.5,0.8,0],[0.5,0,0],[0.7,0,0],[0.7,0.8,0],[1,2,0],[0.8,2,0],[0.6,1.2,0],[0.4,1.2,0],[0.2,2,0],[0,2,0]],
-            'Z': [[0,0,0],[1,0,0],[0.2,0.2,0],[0.8,1.8,0],[0,1.8,0],[0,2,0],[1,2,0],[1,1.8,0],[0.2,0.2,0],[1,0.2,0],[1,0,0]],
-            ' ': [[0,0,0],[0.6,0,0]],
-            '!': [[0.3,0,0],[0.7,0,0],[0.5,1.5,0],[0.5,2,0]],
-            '?': [[0.2,0,0],[0.8,0,0],[1,0.5,0],[0.5,1.2,0],[0.5,1.5,0],[0.5,2,0]],
-            '.': [[0.3,0,0],[0.7,0,0]],
-            ',': [[0.3,0,0],[0.7,0,0],[0.7,0.2,0]],
-            '0': [[0,0,0],[0.5,2,0],[1,0,0],[0,0,0]],
-            '1': [[0.3,0,0],[0.7,0,0],[0.7,2,0],[0.3,2,0]],
-            '2': [[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,2,0],[1,2,0]],
-            '3': [[0,0,0],[1,0,0],[0,1,0],[1,1,0],[0,2,0],[1,2,0]],
-            '4': [[0,0,0],[0,1,0],[1,1,0],[1,0,0],[1,2,0]],
-            '5': [[1,0,0],[0,0,0],[0,1,0],[1,1,0],[1,2,0],[0,2,0]],
-            '6': [[0,0,0],[1,0,0],[0,1,0],[0,2,0],[1,2,0],[1,1,0]],
-            '7': [[0,0,0],[1,0,0],[0.5,2,0]],
-            '8': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0],[0,1,0],[1,1,0]],
-            '9': [[1,0,0],[0,0,0],[0,1,0],[1,1,0],[1,2,0],[0,2,0]]
-        };
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x11161d);
+  camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
+  camera.position.set(60, 60, 80);
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
 
-        function init() {
-            const canvas = document.getElementById('canvas');
-            const viewer = document.getElementById('viewer');
-            
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, viewer.clientWidth / viewer.clientHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-            
-            renderer.setSize(viewer.clientWidth, viewer.clientHeight);
-            scene.background = new THREE.Color(0x1a1a1a);
-            
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(5, 5, 5);
-            scene.add(directionalLight);
-            const backLight = new THREE.DirectionalLight(0x4444ff, 0.3);
-            backLight.position.set(-5, -5, -5);
-            scene.add(backLight);
-            
-            camera.position.set(0, 1, 5);
-            
-            // Mouse controls
-            let mouseDown = false, mouseX = 0, mouseY = 0;
-            
-            canvas.addEventListener('mousedown', (e) => { mouseDown = true; mouseX = e.clientX; mouseY = e.clientY; });
-            canvas.addEventListener('mouseup', () => { mouseDown = false; });
-            canvas.addEventListener('mousemove', (e) => {
-                if (!mouseDown || !textGroup) return;
-                const dx = e.clientX - mouseX;
-                const dy = e.clientY - mouseY;
-                textGroup.rotation.y += dx * 0.01;
-                textGroup.rotation.x += dy * 0.01;
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = viewer.clientWidth / viewer.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(viewer.clientWidth, viewer.clientHeight);
-            });
-            
-            // Generate default text
-            generate3DText();
-            animate();
-        }
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+  dir.position.set(40, 60, 40);
+  scene.add(dir);
+  const dir2 = new THREE.DirectionalLight(0xffffff, 0.3);
+  dir2.position.set(-40, -10, -40);
+  scene.add(dir2);
+  scene.add(new THREE.GridHelper(200, 20, 0x222932, 0x1a1f27));
 
-        function generate3DText() {
-            const text = document.getElementById('textInput').value.toUpperCase();
-            if (!text) return;
-            
-            const size = parseFloat(document.getElementById('sizeSlider').value);
-            const depth = parseFloat(document.getElementById('depthSlider').value);
-            const color = document.getElementById('colorPicker').value;
-            
-            // Remove old text
-            if (textGroup) {
-                scene.remove(textGroup);
-                letters = [];
-            }
-            
-            textGroup = new THREE.Group();
-            const colorHex = new THREE.Color(color);
-            
-            const totalWidth = text.length * size * 1.5;
-            let currentX = -totalWidth / 2;
-            
-            for (let char of text) {
-                const shape = letterShapes[char] || letterShapes['?'];
-                
-                // Create 3D block letter
-                const group = create3DLetter(shape, size, depth, colorHex);
-                group.position.x = currentX + size * 0.75;
-                group.position.y = -size * 0.5;
-                textGroup.add(group);
-                
-                currentX += size * 1.5;
-            }
-            
-            scene.add(textGroup);
-            
-            // Update URL
-            updateShareUrl(text);
-        }
+  resize();
+  window.addEventListener('resize', resize);
+  animate();
 
-        function create3DLetter(shape, size, depth, color) {
-            const group = new THREE.Group();
-            
-            // Create each segment as an extruded box
-            for (let i = 0; i < shape.length - 1; i++) {
-                const p1 = shape[i];
-                const p2 = shape[i + 1];
-                
-                if (p1[0] === p2[0] && p1[1] === p2[1]) continue;
-                
-                const dx = p2[0] - p1[0];
-                const dy = p2[1] - p1[1];
-                const len = Math.sqrt(dx*dx + dy*dy);
-                
-                if (len === 0) continue;
-                
-                const boxGeo = new THREE.BoxGeometry(len * size, size * 0.05, depth);
-                const mat = new THREE.MeshPhongMaterial({ 
-                    color: color,
-                    shininess: 80
-                });
-                const box = new THREE.Mesh(boxGeo, mat);
-                
-                const midX = (p1[0] + p2[0]) / 2;
-                const midY = (p1[1] + p2[1]) / 2;
-                box.position.set(midX * size, midY * size, 0);
-                box.rotation.z = -Math.atan2(dy, dx);
-                
-                group.add(box);
-            }
-            
-            // Add front and back face plates
-            const frontGeo = new THREE.PlaneGeometry(size * 0.95, size * 0.95);
-            const frontMat = new THREE.MeshPhongMaterial({
-                color: color,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.15,
-                side: THREE.DoubleSide
-            });
-            
-            // Front face
-            const front = new THREE.Mesh(frontGeo, frontMat);
-            front.position.set(0, 0, depth/2 + 0.01);
-            group.add(front);
-            
-            // Back face
-            const back = new THREE.Mesh(frontGeo, frontMat.clone());
-            back.position.set(0, 0, -depth/2 - 0.01);
-            group.add(back);
-            
-            return group;
-        }
+  // Load font (Liberation Sans Bold equivalent on three.js)
+  new FontLoader().load(
+    'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json',
+    f => { font = f; rebuild(); }
+  );
+}
 
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            if (animating && textGroup) {
-                textGroup.rotation.y += 0.01;
-            }
-            
-            renderer.render(scene, camera);
-        }
+function resize() {
+  const w = canvas.parentElement.clientWidth;
+  const h = canvas.parentElement.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false);
+}
 
-        function resetView() {
-            if (textGroup) {
-                textGroup.rotation.set(0, 0, 0);
-            }
-            camera.position.set(0, 1, 5);
-            camera.lookAt(0, 0, 0);
-        }
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
 
-        function toggleAnimation() {
-            animating = !animating;
-            event.target.textContent = animating ? '⏸️ Detener' : '▶️ Animación';
-        }
+function buildKeychain() {
+  if (!font) return null;
+  const text = document.getElementById('text').value.trim() || 'TEXTO';
+  const size = +document.getElementById('size').value;
+  const depth = +document.getElementById('depth').value;
+  const plateDepth = +document.getElementById('plate').value;
+  const ringDiam = +document.getElementById('ring').value;
+  const curveSeg = +document.getElementById('curveseg').value;
 
-        function takeScreenshot() {
-            renderer.render(scene, camera);
-            const link = document.createElement('a');
-            link.download = 'letras_3d.png';
-            link.href = renderer.domElement.toDataURL();
-            link.click();
-            alert('📸 Captura guardada: letras_3d.png');
-        }
+  // 1. Build text geometry
+  const textGeom = new TextGeometry(text, {
+    font: font,
+    size: size,
+    height: depth,
+    curveSegments: curveSeg,
+    bevelEnabled: false,
+  });
+  textGeom.computeBoundingBox();
+  const tb = textGeom.boundingBox;
+  const tw = tb.max.x - tb.min.x;
+  const th = tb.max.y - tb.min.y;
 
-        function updateShareUrl(text) {
-            const url = window.location.origin + window.location.pathname + '?text=' + encodeURIComponent(text);
-            document.getElementById('shareUrl').value = url;
-        }
+  // 2. Plate dimensions
+  const padding = 6;
+  const ringOffset = 4;
+  const ringSpace = ringDiam + ringOffset + 4;
+  const plateW = tw + padding * 2 + ringSpace;
+  const plateH = th + padding * 2;
+  const plateRadius = 5;
 
-        function copyShareUrl() {
-            const url = document.getElementById('shareUrl').value;
-            navigator.clipboard.writeText(url).then(() => {
-                alert('🔗 Enlace copiado!\n\nComparte este modelo:\n' + url);
-            });
-        }
+  // 3. Plate as rounded shape
+  const shape = new THREE.Shape();
+  const r = Math.min(plateRadius, plateH / 2 - 0.1);
+  shape.moveTo(r, 0);
+  shape.lineTo(plateW - r, 0);
+  shape.quadraticCurveTo(plateW, 0, plateW, r);
+  shape.lineTo(plateW, plateH - r);
+  shape.quadraticCurveTo(plateW, plateH, plateW - r, plateH);
+  shape.lineTo(r, plateH);
+  shape.quadraticCurveTo(0, plateH, 0, plateH - r);
+  shape.lineTo(0, r);
+  shape.quadraticCurveTo(0, 0, r, 0);
+  // hole for ring
+  const hole = new THREE.Path();
+  hole.absarc(ringOffset + ringDiam / 2, plateH / 2, ringDiam / 2, 0, Math.PI * 2, false);
+  shape.holes.push(hole);
 
-        // Listen for Enter key
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('textInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') generate3DText();
-            });
-            
-            // Update labels
-            document.getElementById('sizeSlider').addEventListener('input', () => {
-                document.getElementById('sizeValue').textContent = 
-                    parseFloat(document.getElementById('sizeSlider').value).toFixed(2);
-            });
-            document.getElementById('depthSlider').addEventListener('input', () => {
-                document.getElementById('depthValue').textContent = 
-                    parseFloat(document.getElementById('depthSlider').value).toFixed(2);
-            });
-        });
+  const plateGeom = new THREE.ExtrudeGeometry(shape, { depth: plateDepth, bevelEnabled: false, curveSegments: curveSeg });
 
-        window.addEventListener('load', init);
-    </script>
+  // 4. Position text on top of plate
+  const textOffset = ringSpace + padding - 2;
+  textGeom.translate(-tb.min.x + textOffset, -tb.min.y + padding, plateDepth);
+
+  // 5. Merge into single BufferGeometry (union of plate + text — both extruded with z>0,
+  //    so already non-overlapping geometrically; STL doesn't require boolean union, just
+  //    one mesh containing both surfaces. For printability we mark as one solid by joining.)
+  const mergedGeom = mergeGeometries([plateGeom, textGeom]);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x7c4dff, roughness: 0.4, metalness: 0.1 });
+  const mesh = new THREE.Mesh(mergedGeom, mat);
+
+  // Center on origin (XY) and rest on grid
+  const bb = new THREE.Box3().setFromObject(mesh);
+  mesh.position.x = -(bb.max.x + bb.min.x) / 2;
+  mesh.position.y = -(bb.max.y + bb.min.y) / 2;
+  mesh.position.z = 0;
+
+  mesh.userData.dims = { w: plateW, h: plateH, d: plateDepth + depth };
+  mesh.userData.text = text;
+
+  return mesh;
+}
+
+function mergeGeometries(geoms) {
+  // Manually merge BufferGeometries (avoid BufferGeometryUtils dep)
+  const positions = [], normals = [];
+  for (const g of geoms) {
+    const ng = g.toNonIndexed();
+    ng.computeVertexNormals();
+    const p = ng.attributes.position.array;
+    const n = ng.attributes.normal.array;
+    for (let i = 0; i < p.length; i++) positions.push(p[i]);
+    for (let i = 0; i < n.length; i++) normals.push(n[i]);
+  }
+  const bg = new THREE.BufferGeometry();
+  bg.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  bg.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  return bg;
+}
+
+function rebuild() {
+  if (currentMesh) scene.remove(currentMesh);
+  const m = buildKeychain();
+  if (!m) return;
+  currentMesh = m;
+  scene.add(m);
+  const d = m.userData.dims;
+  document.getElementById('dims').textContent = `${d.w.toFixed(0)} × ${d.h.toFixed(0)} × ${d.d.toFixed(1)} mm`;
+  const tri = m.geometry.attributes.position.count / 3;
+  document.getElementById('tri').textContent = `${Math.round(tri).toLocaleString()} triángulos`;
+}
+
+window.setText = (t) => {
+  document.getElementById('text').value = t;
+  rebuild();
+};
+
+window.downloadSTL = () => {
+  if (!currentMesh) return alert('No hay modelo todavía.');
+  const exp = new STLExporter();
+  const stl = exp.parse(currentMesh, { binary: true });
+  const blob = new Blob([stl], { type: 'application/octet-stream' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `llavero_${currentMesh.userData.text.replace(/[^a-zA-Z0-9]/g, '_')}.stl`;
+  a.click();
+};
+
+window.resetView = () => {
+  camera.position.set(60, 60, 80);
+  controls.target.set(0, 0, 0);
+  controls.update();
+};
+
+// Live update
+['text', 'size', 'depth', 'plate', 'ring', 'curveseg'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    const v = document.getElementById(id).value;
+    const span = document.getElementById(id + 'Val');
+    if (span) span.textContent = v;
+    rebuild();
+  });
+});
+
+init();
+</script>
 </body>
 </html>
