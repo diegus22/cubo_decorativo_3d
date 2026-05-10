@@ -50,6 +50,9 @@ footer a{color:var(--accent);text-decoration:none}
         <span class="preset" onclick="setText('MAMÁ')">MAMÁ</span>
         <span class="preset" onclick="setText('PAPÁ')">PAPÁ</span>
       </div>
+      <div id="accentWarn" style="display:none;color:#ffb300;font-size:11px;margin-top:6px;padding:6px 10px;background:rgba(255,179,0,0.1);border-radius:6px;border-left:3px solid #ffb300"></div>
+      <div style="display:none">
+      </div>
     </div>
 
     <div class="field">
@@ -175,7 +178,16 @@ function animate() {
 
 function buildKeychain() {
   if (!font) return null;
-  const text = document.getElementById('text').value.trim() || 'TEXTO';
+  let rawText = document.getElementById('text').value.trim() || 'TEXTO';
+  // Strip diacritics (accents stay as separate floating dots in 3D, breaks manifold)
+  // and normalize Ñ → N (helvetiker font doesn't include extended glyphs)
+  const text = rawText.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/Ñ/g,'N').replace(/ñ/g,'n');
+  if (text !== rawText) {
+    document.getElementById('accentWarn').textContent = '↻ Acentos/Ñ removidos para impresión: "' + text + '"';
+    document.getElementById('accentWarn').style.display = 'block';
+  } else {
+    document.getElementById('accentWarn').style.display = 'none';
+  }
   const size = +document.getElementById('size').value;
   const depth = +document.getElementById('depth').value;
   const plateDepth = +document.getElementById('plate').value;
