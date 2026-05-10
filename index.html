@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 Cubo Decorativo 3D - Modelo para Impresión</title>
+    <title>🎨 Letras 3D - Modelo para Impresión</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -29,6 +29,65 @@
             font-size: 1.2em;
             opacity: 0.9;
         }
+        .input-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            max-width: 800px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .input-section h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .input-row label {
+            min-width: 80px;
+        }
+        input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 18px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #ffd700;
+            background: rgba(255,255,255,0.25);
+        }
+        input[type="text"]::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        input[type="range"] {
+            width: 120px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+        }
         .viewer {
             width: 100%;
             max-width: 800px;
@@ -52,16 +111,24 @@
             background: rgba(255,255,255,0.2);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 12px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
             backdrop-filter: blur(10px);
+            font-size: 14px;
         }
         button:hover {
             background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
+        }
+        button.primary {
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            border: none;
+        }
+        button.primary:hover {
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
         }
         .info {
             background: rgba(255,255,255,0.1);
@@ -70,31 +137,73 @@
             margin: 20px 0;
             max-width: 800px;
             backdrop-filter: blur(10px);
+            width: 100%;
         }
         .info h3 { margin-bottom: 15px; color: #ffd700; }
         .info ul { list-style: none; padding: 0; }
         .info li { margin: 8px 0; padding-left: 20px; position: relative; }
         .info li:before { content: "✅"; position: absolute; left: 0; }
-        .share {
+        .preview-text {
+            font-size: 60px;
             text-align: center;
-            margin-top: 30px;
+            padding: 20px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        .share input {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
+        .style-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .style-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
             color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px;
-            width: 300px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .share input::placeholder { color: rgba(255,255,255,0.7); }
+        .style-btn.active {
+            background: rgba(255,215,0,0.2);
+            border-color: #ffd700;
+        }
+        .style-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1 class="title">🎨 Cubo Decorativo 3D</h1>
-        <p class="subtitle">Modelo interactivo para impresión con Bambu Lab</p>
+        <h1 class="title">🎨 Letras 3D Interactivas</h1>
+        <p class="subtitle">Crea palabras en 3D para imprimir con Bambu Lab</p>
+    </div>
+
+    <div class="input-section">
+        <h3>✏️ Escribe tu texto:</h3>
+        <div class="input-row">
+            <input type="text" id="textInput" placeholder="Ej: HOLA, AMIGO, SOUL..." value="HOLA" maxlength="20">
+            <button class="primary" onclick="generate3DText()">🚀 Generar 3D</button>
+        </div>
+        
+        <div class="input-row">
+            <label>📏 Tamaño:</label>
+            <input type="range" id="sizeSlider" min="0.03" max="0.25" step="0.01" value="0.1">
+            <span id="sizeValue">0.10</span>
+        </div>
+        
+        <div class="input-row">
+            <label>📐 Profundidad:</label>
+            <input type="range" id="depthSlider" min="0.1" max="0.8" step="0.05" value="0.3">
+            <span id="depthValue">0.30</span>
+        </div>
+        
+        <div class="input-row">
+            <label>💎 Color:</label>
+            <input type="color" id="colorPicker" value="#ffd700">
+        </div>
     </div>
 
     <div class="viewer" id="viewer">
@@ -104,43 +213,84 @@
     <div class="controls">
         <button onclick="resetView()">🔄 Vista Original</button>
         <button onclick="toggleAnimation()">▶️ Animación</button>
-        <button onclick="changeColor()">🎨 Cambiar Color</button>
-        <button onclick="changeShape()">🔷 Cambiar Forma</button>
+        <button onclick="takeScreenshot()">📸 Capturar</button>
     </div>
 
     <div class="info">
-        <h3>🎯 Características del modelo:</h3>
+        <h3>🎯 Características:</h3>
         <ul>
-            <li>Modelo 3D interactivo completo</li>
-            <li>Control de escala, color y animación</li>
-            <li>Export STL listo para impresión</li>
-            <li>Optimizado para Bambu Lab</li>
-            <li>Compatible con cualquier impresora 3D</li>
+            <li>Letras 3D en cualquier estilo/dirección</li>
+            <li>Profundidad ajustable para impresión</li>
+            <li>Rotación interactiva con mouse</li>
+            <li>Listo para exportar a Bambu Lab</li>
+            <li>Ideal para letreros decorativos</li>
         </ul>
         
         <h3>📋 Para imprimir:</h3>
         <ul>
-            <li>1. ¡Explora el modelo 3D arriba!</li>
-            <li>2. Descarga el STL usando el sistema de Bambu Lab</li>
-            <li>3. Envía a tu impresora</li>
-            <li>4. ¡Disfruta tu creación!</li>
+            <li>1. Escribe tu palabra arriba</li>
+            <li>2. Ajusta tamaño y profundidad</li>
+            <li>3. Genera el modelo 3D</li>
+            <li>4. Exporta con Bambu Lab</li>
         </ul>
     </div>
 
     <div class="share">
-        <h3>🔗 Comparte este modelo:</h3>
-        <input type="text" id="shareUrl" value="https://TU_USUARIO.github.io/cubo_decorativo_3d/" readonly>
-        <button onclick="copyShareUrl()">📋 Copiar enlace</button>
-        <br><br>
-        <button onclick="downloadModel()">📥 Descargar Modelo 3D</button>
+        <h3>🔗 Comparte tu creación:</h3>
+        <input type="text" id="shareUrl" value="" readonly style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:10px;border-radius:5px;margin:10px;width:300px;">
+        <button onclick="copyShareUrl()">📋 Copiar</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let scene, camera, renderer, cube;
+        let scene, camera, renderer, textGroup;
         let animating = false;
-        let currentColor = 0x00ff00;
-        let currentShape = 'cube';
+        let letters = [];
+
+        // Simple 3D letter shapes (block letters)
+        const letterShapes = {
+            'A': [[0,1,0],[0,0,1],[1,0,1],[1,1,0],[0.5,1.5,0.5]],
+            'B': [[0,0,0],[0,2,0],[0.5,2,0],[1,1.5,0],[0.5,1,0],[1,0.5,0],[0,0,0]],
+            'C': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,1.8,0],[1,1.8,0],[1,2,0],[0,2,0],[0,0,0]],
+            'D': [[0,0,0],[0,2,0],[1,1.8,0],[1.2,1,0],[1,0.2,0],[0,0,0]],
+            'E': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,0.9,0],[1,0.9,0],[1,1.1,0],[0.2,1.1,0],[0.2,1.8,0],[1,1.8,0],[1,2,0],[0,2,0],[0,0,0]],
+            'F': [[0,0,0],[1,0,0],[1,0.2,0],[0.2,0.2,0],[0.2,0.9,0],[1,0.9,0],[1,1.1,0],[0.2,1.1,0],[0.2,2,0],[0,2,0],[0,0,0]],
+            'G': [[1,0,0],[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.5,1.2,0],[0.5,1,0],[1,1,0],[1,0,0]],
+            'H': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,2,0],[0.2,0.9,0],[1,0.9,0],[1,0,0],[1,2,0],[1.2,0,0],[1.2,2,0]],
+            'I': [[0,0,0],[1,0,0],[0.4,0,0],[0.4,2,0],[1,2,0],[0,2,0],[0.6,2,0],[0.6,0,0]],
+            'J': [[0,0,0],[1,0,0],[1,0,0],[1,2,0],[0.8,2,0],[0.8,0.2,0],[0,0.2,0],[0,0,0]],
+            'K': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,2,0],[0.2,1,0],[1,2,0],[0.8,2,0],[0.2,1.1,0],[1,0,0],[0.8,0,0]],
+            'L': [[0,0,0],[0,2,0],[0.2,0,0],[0.2,0.2,0],[1,0.2,0],[1,0,0],[0,0,0]],
+            'M': [[0,0,0],[0,2,0],[0.2,0,0],[0.5,1.5,0],[0.8,0,0],[1,2,0],[1.2,0,0]],
+            'N': [[0,0,0],[0,2,0],[0.2,0,0],[1,1.8,0],[1,0,0],[1,2,0],[1.2,0,0]],
+            'O': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0]],
+            'P': [[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.2,1.2,0],[0.2,0,0]],
+            'Q': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0],[0.8,0.8,0],[1,0.6,0],[1,0,0]],
+            'R': [[0,0,0],[0,2,0],[1,2,0],[1,1.2,0],[0.2,1.2,0],[0.2,0,0],[0.2,1,0],[1,0,0],[0.8,0,0]],
+            'S': [[1,0,0],[0,0,0],[0,0.8,0],[1,0.8,0],[1,1.2,0],[0,1.2,0],[0,2,0],[1,2,0]],
+            'T': [[0,0,0],[1,0,0],[0.4,0,0],[0.4,2,0],[0.6,2,0],[0.6,0,0],[0,0,0]],
+            'U': [[0,0,0],[0,2,0],[0.2,2,0],[0.2,0.2,0],[0.8,0.2,0],[0.8,2,0],[1,2,0],[1,0,0],[0,0,0]],
+            'V': [[0,0,0],[0.5,2,0],[0.7,2,0],[1,0,0],[0.8,0,0],[0.6,1.5,0],[0.4,1.5,0],[0.2,0,0]],
+            'W': [[0,0,0],[0.3,2,0],[0.5,2,0],[0.5,1,0],[0.7,2,0],[1,2,0],[1,0,0],[0.8,0,0],[0.6,1.5,0],[0.4,1.5,0],[0.2,0,0]],
+            'X': [[0,0,0],[1,2,0],[0.8,2,0],[0,0.2,0],[1,0,0],[0,2,0],[0.2,2,0]],
+            'Y': [[0,0,0],[0.5,0.8,0],[0.5,0,0],[0.7,0,0],[0.7,0.8,0],[1,2,0],[0.8,2,0],[0.6,1.2,0],[0.4,1.2,0],[0.2,2,0],[0,2,0]],
+            'Z': [[0,0,0],[1,0,0],[0.2,0.2,0],[0.8,1.8,0],[0,1.8,0],[0,2,0],[1,2,0],[1,1.8,0],[0.2,0.2,0],[1,0.2,0],[1,0,0]],
+            ' ': [[0,0,0],[0.6,0,0]],
+            '!': [[0.3,0,0],[0.7,0,0],[0.5,1.5,0],[0.5,2,0]],
+            '?': [[0.2,0,0],[0.8,0,0],[1,0.5,0],[0.5,1.2,0],[0.5,1.5,0],[0.5,2,0]],
+            '.': [[0.3,0,0],[0.7,0,0]],
+            ',': [[0.3,0,0],[0.7,0,0],[0.7,0.2,0]],
+            '0': [[0,0,0],[0.5,2,0],[1,0,0],[0,0,0]],
+            '1': [[0.3,0,0],[0.7,0,0],[0.7,2,0],[0.3,2,0]],
+            '2': [[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,2,0],[1,2,0]],
+            '3': [[0,0,0],[1,0,0],[0,1,0],[1,1,0],[0,2,0],[1,2,0]],
+            '4': [[0,0,0],[0,1,0],[1,1,0],[1,0,0],[1,2,0]],
+            '5': [[1,0,0],[0,0,0],[0,1,0],[1,1,0],[1,2,0],[0,2,0]],
+            '6': [[0,0,0],[1,0,0],[0,1,0],[0,2,0],[1,2,0],[1,1,0]],
+            '7': [[0,0,0],[1,0,0],[0.5,2,0]],
+            '8': [[0,0,0],[1,0,0],[1,2,0],[0,2,0],[0,0,0],[0,1,0],[1,1,0]],
+            '9': [[1,0,0],[0,0,0],[0,1,0],[1,1,0],[1,2,0],[0,2,0]]
+        };
 
         function init() {
             const canvas = document.getElementById('canvas');
@@ -159,86 +309,145 @@
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(5, 5, 5);
             scene.add(directionalLight);
+            const backLight = new THREE.DirectionalLight(0x4444ff, 0.3);
+            backLight.position.set(-5, -5, -5);
+            scene.add(backLight);
             
-            createCube();
-            camera.position.z = 5;
+            camera.position.set(0, 1, 5);
             
             // Mouse controls
-            let mouseDown = false;
-            let mouseX = 0;
-            let mouseY = 0;
+            let mouseDown = false, mouseX = 0, mouseY = 0;
             
-            canvas.addEventListener('mousedown', (e) => {
-                mouseDown = true;
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-            
-            canvas.addEventListener('mouseup', () => {
-                mouseDown = false;
-            });
-            
+            canvas.addEventListener('mousedown', (e) => { mouseDown = true; mouseX = e.clientX; mouseY = e.clientY; });
+            canvas.addEventListener('mouseup', () => { mouseDown = false; });
             canvas.addEventListener('mousemove', (e) => {
-                if (!mouseDown) return;
-                
-                const deltaX = e.clientX - mouseX;
-                const deltaY = e.clientY - mouseY;
-                
-                cube.rotation.y += deltaX * 0.01;
-                cube.rotation.x += deltaY * 0.01;
-                
+                if (!mouseDown || !textGroup) return;
+                const dx = e.clientX - mouseX;
+                const dy = e.clientY - mouseY;
+                textGroup.rotation.y += dx * 0.01;
+                textGroup.rotation.x += dy * 0.01;
                 mouseX = e.clientX;
                 mouseY = e.clientY;
             });
             
-            // Resize handler
             window.addEventListener('resize', () => {
                 camera.aspect = viewer.clientWidth / viewer.clientHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(viewer.clientWidth, viewer.clientHeight);
             });
             
+            // Generate default text
+            generate3DText();
             animate();
         }
 
-        function createCube() {
-            if (cube) scene.remove(cube);
+        function generate3DText() {
+            const text = document.getElementById('textInput').value.toUpperCase();
+            if (!text) return;
             
-            let geometry;
-            if (currentShape === 'cube') {
-                geometry = new THREE.BoxGeometry(2, 2, 2);
-            } else if (currentShape === 'sphere') {
-                geometry = new THREE.SphereGeometry(1.5, 32, 32);
-            } else {
-                geometry = new THREE.ConeGeometry(1.5, 3, 8);
+            const size = parseFloat(document.getElementById('sizeSlider').value);
+            const depth = parseFloat(document.getElementById('depthSlider').value);
+            const color = document.getElementById('colorPicker').value;
+            
+            // Remove old text
+            if (textGroup) {
+                scene.remove(textGroup);
+                letters = [];
             }
             
-            const material = new THREE.MeshPhongMaterial({ 
-                color: currentColor,
-                shininess: 100
+            textGroup = new THREE.Group();
+            const colorHex = new THREE.Color(color);
+            
+            const totalWidth = text.length * size * 1.5;
+            let currentX = -totalWidth / 2;
+            
+            for (let char of text) {
+                const shape = letterShapes[char] || letterShapes['?'];
+                
+                // Create 3D block letter
+                const group = create3DLetter(shape, size, depth, colorHex);
+                group.position.x = currentX + size * 0.75;
+                group.position.y = -size * 0.5;
+                textGroup.add(group);
+                
+                currentX += size * 1.5;
+            }
+            
+            scene.add(textGroup);
+            
+            // Update URL
+            updateShareUrl(text);
+        }
+
+        function create3DLetter(shape, size, depth, color) {
+            const group = new THREE.Group();
+            
+            // Create each segment as an extruded box
+            for (let i = 0; i < shape.length - 1; i++) {
+                const p1 = shape[i];
+                const p2 = shape[i + 1];
+                
+                if (p1[0] === p2[0] && p1[1] === p2[1]) continue;
+                
+                const dx = p2[0] - p1[0];
+                const dy = p2[1] - p1[1];
+                const len = Math.sqrt(dx*dx + dy*dy);
+                
+                if (len === 0) continue;
+                
+                const boxGeo = new THREE.BoxGeometry(len * size, size * 0.05, depth);
+                const mat = new THREE.MeshPhongMaterial({ 
+                    color: color,
+                    shininess: 80
+                });
+                const box = new THREE.Mesh(boxGeo, mat);
+                
+                const midX = (p1[0] + p2[0]) / 2;
+                const midY = (p1[1] + p2[1]) / 2;
+                box.position.set(midX * size, midY * size, 0);
+                box.rotation.z = -Math.atan2(dy, dx);
+                
+                group.add(box);
+            }
+            
+            // Add front and back face plates
+            const frontGeo = new THREE.PlaneGeometry(size * 0.95, size * 0.95);
+            const frontMat = new THREE.MeshPhongMaterial({
+                color: color,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.DoubleSide
             });
             
-            cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
+            // Front face
+            const front = new THREE.Mesh(frontGeo, frontMat);
+            front.position.set(0, 0, depth/2 + 0.01);
+            group.add(front);
+            
+            // Back face
+            const back = new THREE.Mesh(frontGeo, frontMat.clone());
+            back.position.set(0, 0, -depth/2 - 0.01);
+            group.add(back);
+            
+            return group;
         }
 
         function animate() {
             requestAnimationFrame(animate);
             
-            if (animating && cube) {
-                cube.rotation.x += 0.01;
-                cube.rotation.y += 0.01;
+            if (animating && textGroup) {
+                textGroup.rotation.y += 0.01;
             }
             
             renderer.render(scene, camera);
         }
 
         function resetView() {
-            if (cube) {
-                cube.rotation.set(0, 0, 0);
-                cube.position.set(0, 0, 0);
+            if (textGroup) {
+                textGroup.rotation.set(0, 0, 0);
             }
-            camera.position.set(0, 0, 5);
+            camera.position.set(0, 1, 5);
             camera.lookAt(0, 0, 0);
         }
 
@@ -247,33 +456,44 @@
             event.target.textContent = animating ? '⏸️ Detener' : '▶️ Animación';
         }
 
-        function changeColor() {
-            const colors = [0x00ff00, 0xff0000, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff];
-            currentColor = colors[Math.floor(Math.random() * colors.length)];
-            if (cube) {
-                cube.material.color.setHex(currentColor);
-            }
+        function takeScreenshot() {
+            renderer.render(scene, camera);
+            const link = document.createElement('a');
+            link.download = 'letras_3d.png';
+            link.href = renderer.domElement.toDataURL();
+            link.click();
+            alert('📸 Captura guardada: letras_3d.png');
         }
 
-        function changeShape() {
-            const shapes = ['cube', 'sphere', 'cone'];
-            const currentIndex = shapes.indexOf(currentShape);
-            currentShape = shapes[(currentIndex + 1) % shapes.length];
-            createCube();
+        function updateShareUrl(text) {
+            const url = window.location.origin + window.location.pathname + '?text=' + encodeURIComponent(text);
+            document.getElementById('shareUrl').value = url;
         }
 
         function copyShareUrl() {
             const url = document.getElementById('shareUrl').value;
             navigator.clipboard.writeText(url).then(() => {
-                alert('🔗 ¡Enlace copiado al portapapeles!\n\nComparte este modelo con tus amigos:\n' + url);
+                alert('🔗 Enlace copiado!\n\nComparte este modelo:\n' + url);
             });
         }
 
-        function downloadModel() {
-            alert('🚀 Sistema listo para impresión 3D!\n\n1. Usa el sistema Bambu Lab automatizado\n2. Crea tu modelo personalizado\n3. Envía directamente a impresora\n\n📦 ¡Tu cubo 3D esperando ser impreso!');
-        }
+        // Listen for Enter key
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('textInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') generate3DText();
+            });
+            
+            // Update labels
+            document.getElementById('sizeSlider').addEventListener('input', () => {
+                document.getElementById('sizeValue').textContent = 
+                    parseFloat(document.getElementById('sizeSlider').value).toFixed(2);
+            });
+            document.getElementById('depthSlider').addEventListener('input', () => {
+                document.getElementById('depthValue').textContent = 
+                    parseFloat(document.getElementById('depthSlider').value).toFixed(2);
+            });
+        });
 
-        // Initialize when page loads
         window.addEventListener('load', init);
     </script>
 </body>
