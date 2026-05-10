@@ -1,28 +1,42 @@
-# 🎨 Cubo Decorativo 3D
+# Diseños 3D imprimibles — Diego García
 
-Modelo interactivo 3D para impresión con Bambu Lab.
+Repo único con varios objetos 3D paramétricos generados con OpenSCAD.
 
-[![3D Model](https://img.shields.io/badge/3D-Model-blue.svg)](https://github.com)
-[![3D Printing](https://img.shields.io/badge/3D-Printing-green.svg)](https://github.com)
+## Contenido
 
-## 🎯 Características
+| Archivo | Qué es |
+|---|---|
+| `cubo_decorativo.scad` | Cubo decorativo original |
+| `llavero.scad` | **Llavero personalizable** con texto + aro (manifold) |
+| `render.sh` | Render batch desde CLI |
+| `stl/` | STLs renderizados listos para imprimir |
 
-- ✅ Modelo 3D interactivo
-- ✅ Control de color y forma
-- ✅ Animación automática
-- ✅ Optimizado para impresión 3D
-- ✅ Compatible con Bambu Lab
+## Quickstart
 
-## 🚀 Acceso
+```bash
+brew install --cask openscad
+./render.sh LORETO DIEGO AVIOT
+ls stl/
+```
 
-Visita: `https://diegus22.github.io/cubo_decorativo_3d/`
+## Llavero parametrizable
 
-## 🛠️ Tecnología
+Edita parámetros al principio de `llavero.scad` (texto, fuente, tamaño,
+diámetro del aro, etc.) o pasa la palabra como argumento al render:
 
-- Three.js para 3D
-- HTML5/CSS3
-- JavaScript
+```bash
+./render.sh "MARIA"   # → stl/MARIA.stl
+```
 
-## 📄 Licencia
+Características:
+- ✅ Manifold (un solo cuerpo, sin huecos parásitos) — verificado con CGAL
+- ✅ Imprime sin soportes (cara plana abajo)
+- ✅ Aro integrado, diámetro ajustable
+- ✅ Material: PLA / PETG / ABS
 
-MIT License
+## Tips de impresión
+
+- Capa: 0.16 mm (FDM), 0.05 mm (SLA)
+- Relleno: 20% (poca tensión mecánica)
+- Sin soportes con la cara plana abajo
+- Lija ligeramente el aro con papel 400 si quedan bavas
